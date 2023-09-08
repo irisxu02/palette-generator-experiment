@@ -6,4 +6,5 @@ Upload an image and choose the method. The generated palette will be shown at th
 ## Building the Application
 
 Backend with Python and Flask
+
 Frontend with HTML, CSS and JavaScript

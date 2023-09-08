@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify, get_flashed_messages
+from flask import Flask, render_template, request, session, redirect, url_for, flash, send_from_directory
 from flask_session import Session
 import os
 from werkzeug.utils import secure_filename
@@ -14,9 +14,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Configure the session
 app.config["SESSION_PERMANENT"] = False
 app.config['SESSION_TYPE'] = 'filesystem'
-app.secret_key = 'your_secret_key'  # Replace with an actual secret key
 Session(app)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -29,13 +27,17 @@ def index():
             # Save the file information to the database
             # Generate the color palette using the selected method
             # Return the generated palette and the image to display
-            
-            response_data = {
-                'filename': filename
-            }
-            return jsonify(response_data)            
+            flash("Image uploaded successfully!", "success")
+            return render_template('index.html', filename=filename)
+        else:
+            flash("Invalid file extension. Only jpg, jpeg, png, and gif are allowed.", "error")     
 
-    return render_template('index.html', flash_messages=get_flashed_messages())
+    return render_template('index.html')
+
+
+@app.route('/uploads/<filename>')
+def uploads(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
