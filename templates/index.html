@@ -12,36 +12,76 @@
     <title>Colour Palette Generator</title>
 </head>
 <body>
-    <h1>Color Palette Generator</h1>
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*" required>
-        <select name="method">
-            <option value="kmeans">K-Means Clustering</option>
-            <option value="dominant">Dominant Colour</option>
-            <option value="colourtheory">Colour Theory</option>
-            <option value="median">Median Cut</option>
-            <option value="octree">Octree</option>
-            <!-- plus other methods -->
-        </select>
-        <button type="submit">Generate Palette</button>
-    </form>
-    
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div id="flash-messages">
-        {% for message in messages %}
-        <div class="flash-message">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
-    <div id='image-container'>
-        {% if filename %}
-        <img src="{{ url_for('uploads', filename=filename) }}" width="60%" alt="uploaded image" />
+    <div class="container-sm my-5">
+        <h1>Color Palette Generator</h1>
+        <div class="container mb-3 align-items-center">
+            <label for="image" class="form-label">Upload a jpg, jpeg, png, gif image.</label>
+            <form action="/" method="post" enctype="multipart/form-data" class="input-group">
+                <input class="form-control" type="file" name="image" accept="image/*" required>
+                <input class="btn btn-outline-secondary btn-sm" type="submit" value="Upload">
+            </form>
+        </div>
+        
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div id="flash-messages">
+            {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        </div>
         {% endif %}
+        {% endwith %}
+
+        <div class="container mb-3" id='image-container'>
+            {% if filename %}
+            <img src="{{ url_for('uploads', filename=filename) }}" class="mx-auto d-block" width="80%" style="max-height: 800px; max-width: 800px;" alt="uploaded image" />
+            {% endif %}
+        </div>
+
+        <div class="container mb-3">
+            <form action="/method" method="post" enctype="multipart/form-data" class="input-group align-items-center">
+                <div class="row g-5">
+                    <div class="col">
+                        <label for="method" class="form-label">Generation Method</label>
+                        <select name="method" class="form-select">
+                            <option value="kmeans">K-Means Clustering</option>
+                            <option value="colourtheory">Colour Theory</option>
+                            <option value="median">Median Cut</option>
+                            <option value="octree">Octree</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="number" class="form-label">Number of Colors</label>
+                        <input type="range" class="form-range" name="number" min="1" max="10" value="5" oninput="this.nextElementSibling.value = this.value">
+                        <output>5</output>
+                    </div>
+                </div>
+                <div class="col"></div><input class="btn btn-primary" type="submit" value="Generate Palette"></div>
+            </form>
+        </div>
+
+        <div class="container mb-3" id="palette">
+            <!-- hex codes -->
+            <div class="row g-5">
+                {% if palette %}
+                {% for color in palette %}
+                <div class="col"><h2>{{ color }}</h2></div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <!-- color boxes -->
+            <div class="row g-5">
+                {% if palette %}
+                {% for color in palette %}
+                <div class="col">
+                    <button class="container-sm color-box" style="background-color:{{ color }}; border:none; height:100px;" onclick="copyHex({{ color }})"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
     </div>
-    <div id="palette"></div>
+    <script src="static/script.js"></script>
 </body>
 </html>

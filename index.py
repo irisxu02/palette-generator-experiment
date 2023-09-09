@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 from flask_session import Session
 import os
 from werkzeug.utils import secure_filename
+from generation import kmeans_generation, median_cut
 
 
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
@@ -22,13 +23,15 @@ def index():
         file = request.files['image']
         if file and file.filename.lower().endswith(tuple(ALLOWED_EXTENSIONS)):
             filename = secure_filename(file.filename)
+            session['filename'] = filename
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
+            session['file_path'] = file_path
+            file.save(session['file_path'])
             # Save the file information to the database
             # Generate the color palette using the selected method
             # Return the generated palette and the image to display
             flash("Image uploaded successfully!", "success")
-            return render_template('index.html', filename=filename)
+            return render_template('index.html', filename=session['filename'])
         else:
             flash("Invalid file extension. Only jpg, jpeg, png, and gif are allowed.", "error")     
 
@@ -38,6 +41,23 @@ def index():
 @app.route('/uploads/<filename>')
 def uploads(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+@app.route('/method', methods=['GET', 'POST'])
+def gen_method():
+    if request.method == 'POST':
+        session['gen_method'] = request.form['method']
+        session['num_colors'] = request.form['number']
+        if (session['gen_method']) == "kmeans":
+            session['palette'] = kmeans_generation(session['file_path'], session['num_colors'])
+        elif (session['gen_method']) == "median":
+            session['palette'] = median_cut(session['file_path'], session['num_colors'])
+        else:
+            session['palette'] = kmeans_generation(session['file_path'], session['num_colors'])
+        return render_template('index.html', filename=session['filename'], palette=session['palette'])
+    
+    return render_template('index.html', filename=session['filename'])
+
 
 if __name__ == '__main__':
     app.run(debug=True)
