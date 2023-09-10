@@ -3,11 +3,12 @@ import numpy as np
 from sklearn.cluster import KMeans
 from octree_color_quantizer.octree_quantizer import OctreeQuantizer
 from octree_color_quantizer.color import Color
+from typing import List, Tuple
 
 MAX_HEIGHT = 720
 MAX_WIDTH = 1280
 
-def clamp_size(image):
+def clamp_size(image) -> None:
     """
     Given an image, resizes it to a maximum of MAX_HEIGHT x MAX_WIDTH.
     """
@@ -17,7 +18,7 @@ def clamp_size(image):
         image = cv2.resize(image, (int(width * scale), int(height * scale)), interpolation=cv2.INTER_AREA)
 
 
-def image_to_pixels(image_path):
+def image_to_pixels(image_path: str) -> np.ndarray:
     """
     Given an image path, returns a h*w x 3 matrix of rgb values for pixels in the image.
     """
@@ -29,9 +30,17 @@ def image_to_pixels(image_path):
     return pixels
 
 
-# num_colors: string input
-# given an image path and number of colors, returns a list of hex color codes
-def kmeans_generation(image_path, num_colors):
+def kmeans_generation(image_path: str, num_colors: str) -> List[str]:
+    """
+    Generate a palette of a specified number of colors using k-means clustering.
+
+    Args:
+        image_path (str): The path to the input image.
+        num_colors (int): The number of colors to generate in the palette.
+
+    Returns:
+        List[str]: A list of hex color codes representing the generated palette.    
+    """
     pixels = image_to_pixels(image_path)
     kmeans = KMeans(n_clusters=int(num_colors), init='k-means++', random_state=0, n_init='auto')
     kmeans.fit(pixels)
@@ -40,10 +49,30 @@ def kmeans_generation(image_path, num_colors):
     return palette
 
 
-def median_cut(image_path, num_colors):
+def median_cut(image_path: str, num_colors: str) -> List[str]:
+    """
+    Generate a palette of a specified number of colors using Median cut.
+    Args:
+        image_path (str): The path to the input image.
+        num_colors (int): The number of colors to generate in the palette.
+
+    Returns:
+        List[str]: A list of hex color codes representing the generated palette.
+    """
     pixels = image_to_pixels(image_path)
     
-    def split_cube(cube):
+    def split_cube(cube: List[np.ndarray]) -> Tuple[List[np.ndarray], List[np.ndarray]]:
+        """
+        Split a cube of pixel colors into two sub-cubes based on the channel with the highest color range.
+
+        Args:
+            cube (List[np.ndarray]): A list of numpy arrays representing pixel colors in the cube.
+
+        Returns:
+            Tuple[List[np.ndarray], List[np.ndarray]]: A tuple containing two lists of numpy arrays:
+                - The left sub-cube with colors from the lower range of the highest range channel.
+                - The right sub-cube with colors from the higher range of the highest range channel.
+        """
         # find the color channel in the image with the greatest range
         r_range = np.max(cube[:, 0]) - np.min(cube[:, 0])
         g_range = np.max(cube[:, 1]) - np.min(cube[:, 1])
@@ -78,7 +107,16 @@ def median_cut(image_path, num_colors):
     return palette
 
 
-def octree_quantization(image_path, num_colors):
+def octree_quantization(image_path: str, num_colors: str) -> List[str]:
+    """
+    Generate a palette of a specified number of colors using an octree.
+    Args:
+        image_path (str): The path to the input image.
+        num_colors (int): The number of colors to generate in the palette.
+
+    Returns:
+        List[str]: A list of hex color codes representing the generated palette.
+    """
     pixels = image_to_pixels(image_path)
     
     octree = OctreeQuantizer()
