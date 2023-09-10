@@ -1,29 +1,38 @@
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
-
+from octree_color_quantizer.octree_quantizer import OctreeQuantizer
+from octree_color_quantizer.color import Color
 
 MAX_HEIGHT = 720
 MAX_WIDTH = 1280
 
-# ensures that image is not too large
 def clamp_size(image):
+    """
+    Given an image, resizes it to a maximum of MAX_HEIGHT x MAX_WIDTH.
+    """
     height, width, _ = image.shape
     if height * width > MAX_HEIGHT * MAX_WIDTH:
         scale = min(MAX_HEIGHT / height, MAX_WIDTH / width)
-        image = cv2.resize(image, (int(width * scale), int(height * scale)))
+        image = cv2.resize(image, (int(width * scale), int(height * scale)), interpolation=cv2.INTER_AREA)
 
 
-# num_colors: string input
-# given an image path and number of colors, returns a list of hex color codes
-def kmeans_generation(image_path, num_colors):
-    # read and preprocess image
+def image_to_pixels(image_path):
+    """
+    Given an image path, returns a h*w x 3 matrix of rgb values for pixels in the image.
+    """
     image = cv2.imread(image_path)
     clamp_size(image)
     im_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     height, width, _ = image.shape
     pixels = im_rgb.reshape(height*width, 3)
+    return pixels
 
+
+# num_colors: string input
+# given an image path and number of colors, returns a list of hex color codes
+def kmeans_generation(image_path, num_colors):
+    pixels = image_to_pixels(image_path)
     kmeans = KMeans(n_clusters=int(num_colors), init='k-means++', random_state=0, n_init='auto')
     kmeans.fit(pixels)
     rgb_colors = kmeans.cluster_centers_.astype(int)
@@ -32,14 +41,9 @@ def kmeans_generation(image_path, num_colors):
 
 
 def median_cut(image_path, num_colors):
-    image = cv2.imread(image_path)
-    clamp_size(image)
-    im_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    height, width, _ = image.shape
-    pixels = im_rgb.reshape(height*width, 3)
-
+    pixels = image_to_pixels(image_path)
+    
     def split_cube(cube):
-        print(cube.shape)
         # find the color channel in the image with the greatest range
         r_range = np.max(cube[:, 0]) - np.min(cube[:, 0])
         g_range = np.max(cube[:, 1]) - np.min(cube[:, 1])
@@ -74,3 +78,14 @@ def median_cut(image_path, num_colors):
     return palette
 
 
+def octree_quantization(image_path, num_colors):
+    pixels = image_to_pixels(image_path)
+    
+    octree = OctreeQuantizer()
+    for pixel in pixels:
+        octree.add_color(Color(*pixel))
+    palette = octree.make_palette(int(num_colors))
+
+    rgb_colors = [(color.red, color.blue, color.green) for color in palette]
+    palette = list('#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in rgb_colors)
+    return palette
