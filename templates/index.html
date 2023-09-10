@@ -46,7 +46,6 @@
                         <label for="method" class="form-label">Generation Method</label>
                         <select name="method" class="form-select">
                             <option value="kmeans">K-Means Clustering</option>
-                            <option value="colourtheory">Colour Theory</option>
                             <option value="median">Median Cut</option>
                             <option value="octree">Octree</option>
                         </select>
@@ -61,7 +60,7 @@
             </form>
         </div>
 
-        <div class="container mb-3" id="palette">
+        <div class="container mb-5" id="palette">
             <!-- hex codes -->
             <div class="row g-5">
                 {% if palette %}

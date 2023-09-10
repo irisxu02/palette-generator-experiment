@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 from flask_session import Session
 import os
 from werkzeug.utils import secure_filename
-from generation import kmeans_generation, median_cut
+from generation import kmeans_generation, median_cut, octree_quantization
 
 
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
@@ -52,6 +52,8 @@ def gen_method():
             session['palette'] = kmeans_generation(session['file_path'], session['num_colors'])
         elif (session['gen_method']) == "median":
             session['palette'] = median_cut(session['file_path'], session['num_colors'])
+        elif (session['gen_method']) == "octree":
+            session['palette'] = octree_quantization(session['file_path'], session['num_colors'])
         else:
             session['palette'] = kmeans_generation(session['file_path'], session['num_colors'])
         return render_template('index.html', filename=session['filename'], palette=session['palette'])

@@ -99,8 +99,7 @@ def median_cut(image_path: str, num_colors: str) -> List[str]:
         cubes.sort(key=lambda cube: cube.shape[0], reverse=True)
         largest_cube = cubes.pop(0)
         left, right = split_cube(largest_cube)
-        cubes.append(left)
-        cubes.append(right)
+        cubes.extend([left, right])
     
     rgb_colors = [tuple(cube.mean(axis=0).astype(int)) for cube in cubes]
     palette = list('#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in rgb_colors)
