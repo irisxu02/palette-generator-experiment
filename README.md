@@ -3,12 +3,14 @@ An exploration of [**color quantization algorithms**](https://en.wikipedia.org/w
 
 <div align="center"><img src="static/images/palette-generator-MVP.png" width=80%></div>
 
-## Building the Application
-
 Backend with Python and Flask
+
 Frontend with HTML, CSS and JavaScript
+
 Template engine: Jinja2
+
 Libraries: see requirements.txt
+`pip install -r requirements.txt`
 
 ## The Algorithms
 Before any of the algorithms are applied, if the provided image has higher than 720p image resolution, I first downsample the image using `cv2.resize()` with `INTER_AREA` interpolation to help speed up the palette generation.
