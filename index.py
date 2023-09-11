@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, session, redirect, url_for, flash, send_from_directory
+from flask import Flask, render_template, request, session, flash, send_from_directory
 from flask_session import Session
 import os
 from werkzeug.utils import secure_filename
 from generation import kmeans_generation, median_cut, octree_quantization
-
+from socket import gethostname
 
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
@@ -62,4 +62,5 @@ def gen_method():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if 'liveconsole' not in gethostname():
+        app.run()
