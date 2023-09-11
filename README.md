@@ -48,3 +48,8 @@ An octree data structure is initialized with the root node representing the enti
 
 **Known Issues (TODO)**
 - Error handling for invalid image uploads or missing image when clicked Generate Palette button.
+
+## Notes for Running the App
+Install dependencies with `pip install -r requirements.txt`
+
+Run locally with `python -m flask --app index --debug run`

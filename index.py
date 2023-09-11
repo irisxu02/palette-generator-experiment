@@ -31,11 +31,11 @@ def index():
             # Generate the color palette using the selected method
             # Return the generated palette and the image to display
             flash("Image uploaded successfully!", "success")
-            return render_template('index.html', filename=session['filename'])
+            return render_template('index.html', filename=session['filename'], enable_generate=True)
         else:
             flash("Invalid file extension. Only jpg, jpeg, png, and gif are allowed.", "error")     
 
-    return render_template('index.html')
+    return render_template('index.html', enable_generate=True)
 
 
 @app.route('/uploads/<filename>')

@@ -20,14 +20,3 @@ venv.bak/
 pgenv/
 
 static/uploads/
-
-# Firebase stuff:
-firebase.json
-firestore.indexes.json
-firestore.rules
-.firebase
-.firestore
-.runtimeconfig.json
-.firebaserc
-public/
-dist/
