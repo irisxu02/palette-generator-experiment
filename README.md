@@ -28,7 +28,7 @@ Median cut selects a representative subset of colors from an image by iterativel
 ### Octree Quantization
 Submodule created using Dmitry Alimov's https://github.com/delimitry/octree_color_quantizer
 
-An octree data structure is initialized with the root node representing the entire RGB color space, which will be split into octants. For every pixel in the image, the pixel color is added to the leaf node that it is most similar to. When a single leaf node becomes too populated, it will split into 8 child nodes each representing a portion of the color space within the parent nod. The process continues recursively until all pixels are represented by leaf nodes. The final colors of the palette are calculated by taking the mean of the pixels in each leaf node.
+An octree data structure is initialized with the root node representing the entire RGB color space, which will be split into octants. For every pixel in the image, the pixel color is added to the leaf node that it is most similar to. When a single leaf node becomes too populated, it will split into 8 child nodes each representing a portion of the color space within the parent node. The process continues recursively until all pixels are represented by leaf nodes. The final colors of the palette are calculated by taking the mean of the pixels in each leaf node.
 
 ## Sample Results
 
@@ -50,6 +50,17 @@ An octree data structure is initialized with the root node representing the enti
 - Error handling for invalid image uploads or missing image when clicked Generate Palette button.
 
 ## Notes for Running the App
-Install dependencies with `pip install -r requirements.txt`
+Clone this repository and navigate to the root.
+```
+git clone git@github.com:irisxu02/palette-generator-experiment.git
+cd palette-generator-experiment
+```
+Fetch submodules:
+```git submodule update --init --recursive```
 
-Run locally with `python -m flask --app index --debug run`
+I recommend creating a virtual environment:
+```python -m venv venv```
+
+Install dependencies: ```pip install -r requirements.txt```
+
+Run locally: ```python -m flask --app index --debug run```
