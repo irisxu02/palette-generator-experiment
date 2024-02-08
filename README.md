@@ -59,7 +59,10 @@ Fetch submodules:
 ```git submodule update --init --recursive```
 
 I recommend creating a virtual environment:
-```python -m venv venv```
+```
+python -m venv venv
+source venv/Scripts/activate
+```
 
 Install dependencies: ```pip install -r requirements.txt```
 

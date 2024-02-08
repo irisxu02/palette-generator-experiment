@@ -126,3 +126,11 @@ def octree_quantization(image_path: str, num_colors: str) -> List[str]:
     rgb_colors = [(color.red, color.blue, color.green) for color in palette]
     palette = list('#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in rgb_colors)
     return palette
+
+
+# Map of method names to functions
+methods = {
+    "kmeans": kmeans_generation,
+    "median": median_cut,
+    "octree": octree_quantization
+}
