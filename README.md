@@ -56,7 +56,7 @@ git clone git@github.com:irisxu02/palette-generator-experiment.git
 cd palette-generator-experiment
 ```
 
-I recommend creating a virtual environment:
+I recommend creating a virtual environment with Python 3.11
 ```
 python -m venv venv
 source venv/Scripts/activate

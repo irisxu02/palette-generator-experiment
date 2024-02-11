@@ -1,3 +1,4 @@
+from collections import defaultdict
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
@@ -125,9 +126,20 @@ def median_cut(image_path: str, num_colors: str) -> List[str]:
 #     palette = list('#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in rgb_colors)
 #     return palette
 
+def frequency_counting(image_path: str, num_colors: str) -> List[str]:
+    """Count the frequency of each color in the image and return the num_colors most frequent colors."""
+    pixels = image_to_pixels(image_path)
+    hist = defaultdict(int)
+    for pixel in pixels:
+        r, g, b = pixel
+        hist[r, g, b] += 1
+    rgb_colors = sorted(hist, key=hist.get, reverse=True)[:num_colors]
+    palette = list('#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in rgb_colors)
+    return palette 
 
 # Map of method names to functions
 methods = {
     "kmeans": kmeans_generation,
     "median": median_cut,
+    "freqCount": frequency_counting
 }
