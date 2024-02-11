@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
-from octree_color_quantizer.octree_quantizer import OctreeQuantizer
-from octree_color_quantizer.color import Color
 from typing import List, Tuple
 
 MAX_HEIGHT = 720
@@ -106,31 +104,30 @@ def median_cut(image_path: str, num_colors: str) -> List[str]:
     return palette
 
 
-def octree_quantization(image_path: str, num_colors: str) -> List[str]:
-    """
-    Generate a palette of a specified number of colors using an octree.
-    Args:
-        image_path (str): The path to the input image.
-        num_colors (int): The number of colors to generate in the palette.
+# def octree_quantization(image_path: str, num_colors: str) -> List[str]:
+#     """
+#     Generate a palette of a specified number of colors using an octree.
+#     Args:
+#         image_path (str): The path to the input image.
+#         num_colors (int): The number of colors to generate in the palette.
 
-    Returns:
-        List[str]: A list of hex color codes representing the generated palette.
-    """
-    pixels = image_to_pixels(image_path)
+#     Returns:
+#         List[str]: A list of hex color codes representing the generated palette.
+#     """
+#     pixels = image_to_pixels(image_path)
     
-    octree = OctreeQuantizer()
-    for pixel in pixels:
-        octree.add_color(Color(*pixel))
-    palette = octree.make_palette(int(num_colors))
+#     octree = OctreeQuantizer()
+#     for pixel in pixels:
+#         octree.add_color(Color(*pixel))
+#     palette = octree.make_palette(int(num_colors))
 
-    rgb_colors = [(color.red, color.blue, color.green) for color in palette]
-    palette = list('#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in rgb_colors)
-    return palette
+#     rgb_colors = [(color.red, color.blue, color.green) for color in palette]
+#     palette = list('#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in rgb_colors)
+#     return palette
 
 
 # Map of method names to functions
 methods = {
     "kmeans": kmeans_generation,
     "median": median_cut,
-    "octree": octree_quantization
 }

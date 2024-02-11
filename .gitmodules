@@ -1,3 +1,0 @@
-[submodule "octree_color_quantizer"]
-	path = octree_color_quantizer
-	url = git@github.com:delimitry/octree_color_quantizer.git

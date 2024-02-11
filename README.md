@@ -25,7 +25,7 @@ This is a non-deterministic algorithm and is sensitive to initial cluster center
 
 Median cut selects a representative subset of colors from an image by iteratively dividing the color space into smaller and smaller boxes by the median pixel in the highest variable dimension (i.e. cutting the largest box by half on the longest side). The iteration stops when the number of boxes reach the desired number of colors. The final colors of the palette are calculated by taking the mean of the pixels in each box.
 
-### Octree Quantization
+### Octree Quantization (temporarily removed)
 Submodule created using Dmitry Alimov's https://github.com/delimitry/octree_color_quantizer
 
 An octree data structure is initialized with the root node representing the entire RGB color space, which will be split into octants. For every pixel in the image, the pixel color is added to the leaf node that it is most similar to. When a single leaf node becomes too populated, it will split into 8 child nodes each representing a portion of the color space within the parent node. The process continues recursively until all pixels are represented by leaf nodes. The final colors of the palette are calculated by taking the mean of the pixels in each leaf node.
@@ -55,8 +55,6 @@ Clone this repository and navigate to the root.
 git clone git@github.com:irisxu02/palette-generator-experiment.git
 cd palette-generator-experiment
 ```
-Fetch submodules:
-```git submodule update --init --recursive```
 
 I recommend creating a virtual environment:
 ```
